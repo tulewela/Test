@@ -9,11 +9,11 @@ LEFT = "LEFT"
 UP = "UP"
 DOWN = "DOWN"
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+BLACK = (10, 10, 10)
+WHITE = (25, 155, 205)
+RED = (255, 20, 80)
+GREEN = (10, 255, 40)
+BLUE = (0, 100, 255)
 
 class Ball(pygame.sprite.Sprite):
     def __init__(self, color):
