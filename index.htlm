@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eleganter Grafischer Taschenrechner</title>
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        calc: {
+                            bg: '#0f172a',
+                            body: '#1e293b',
+                            display: '#0f172a',
+                            btn: '#334155',
+                            btnHover: '#475569',
+                            op: '#3b82f6',
+                            opHover: '#2563eb',
+                            action: '#ef4444',
+                            actionHover: '#dc2626',
+                            equal: '#10b981',
+                            equalHover: '#059669'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+        }
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-active:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="font-sans flex items-center justify-center p-4 antialiased text-white">
+
+    <div class="w-full max-w-sm glass-effect rounded-3xl p-6 shadow-2xl relative overflow-hidden my-auto">
+        
+        <!-- Subtle Glow Background Effect -->
+        <div class="absolute -top-20 -left-20 w-40 h-40 bg-blue-500 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+        <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-purple-500 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-4 px-1">
+            <span class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Taschenrechner</span>
+            <div class="flex space-x-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+            </div>
+        </div>
+
+        <!-- Calculator Display -->
+        <div class="bg-calc-display/90 rounded-2xl p-4 mb-6 text-right flex flex-col justify-between min-h-[100px] border border-slate-700/50 shadow-inner">
+            <div id="history-display" class="text-slate-400 text-sm h-6 overflow-hidden text-ellipsis whitespace-nowrap transition-all">
+                <!-- Historie/Zwischenrechnung -->
+            </div>
+            <div id="main-display" class="text-3xl sm:text-4xl font-light text-white overflow-x-auto whitespace-nowrap scrollbar-none">
+                0
+            </div>
+        </div>
+
+        <!-- Keypad Buttons Grid -->
+        <div class="grid grid-cols-4 gap-3">
+            <!-- Row 1 -->
+            <button onclick="clearAll()" class="btn-active bg-calc-action text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-actionHover transition-all shadow-md active:shadow-none">AC</button>
+            <button onclick="toggleSign()" class="btn-active bg-calc-btn text-slate-200 font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">±</button>
+            <button onclick="applyPercentage()" class="btn-active bg-calc-btn text-slate-200 font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">%</button>
+            <button onclick="setOperator('÷')" class="btn-active bg-calc-op text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-opHover transition-all shadow-md active:shadow-none">÷</button>
+
+            <!-- Row 2 -->
+            <button onclick="appendNumber('7')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">7</button>
+            <button onclick="appendNumber('8')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">8</button>
+            <button onclick="appendNumber('9')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">9</button>
+            <button onclick="setOperator('×')" class="btn-active bg-calc-op text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-opHover transition-all shadow-md active:shadow-none">×</button>
+
+            <!-- Row 3 -->
+            <button onclick="appendNumber('4')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">4</button>
+            <button onclick="appendNumber('5')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">5</button>
+            <button onclick="appendNumber('6')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">6</button>
+            <button onclick="setOperator('-')" class="btn-active bg-calc-op text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-opHover transition-all shadow-md active:shadow-none">−</button>
+
+            <!-- Row 4 -->
+            <button onclick="appendNumber('1')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">1</button>
+            <button onclick="appendNumber('2')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">2</button>
+            <button onclick="appendNumber('3')" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">3</button>
+            <button onclick="setOperator('+')" class="btn-active bg-calc-op text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-opHover transition-all shadow-md active:shadow-none">+</button>
+
+            <!-- Row 5 -->
+            <button onclick="appendNumber('0')" class="btn-active col-span-2 bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none text-left pl-7">0</button>
+            <button onclick="appendDecimal()" class="btn-active bg-calc-btn text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-btnHover transition-all shadow-md active:shadow-none">,</button>
+            <button onclick="calculateResult()" class="btn-active bg-calc-equal text-white font-medium p-4 rounded-2xl text-xl hover:bg-calc-equalHover transition-all shadow-md active:shadow-none">=</button>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let currentInput = '0';
+        let previousInput = '';
+        let operator = null;
+        let shouldResetDisplay = false;
+
+        const mainDisplay = document.getElementById('main-display');
+        const historyDisplay = document.getElementById('history-display');
+
+        // Update Display Function
+        function updateDisplay() {
+            mainDisplay.innerText = currentInput.replace('.', ',');
+            if (operator !== null) {
+                historyDisplay.innerText = `${previousInput.replace('.', ',')} ${operator}`;
+            } else {
+                historyDisplay.innerText = '';
+            }
+        }
+
+        // Append Digits
+        function appendNumber(number) {
+            if (currentInput === '0' || shouldResetDisplay) {
+                currentInput = number;
+                shouldResetDisplay = false;
+            } else {
+                // Limit maximum display digits to prevent layout break
+                if (currentInput.replace('.', '').length < 12) {
+                    currentInput += number;
+                }
+            }
+            updateDisplay();
+        }
+
+        // Decimal Point Handling
+        function appendDecimal() {
+            if (shouldResetDisplay) {
+                currentInput = '0.';
+                shouldResetDisplay = false;
+            } else if (!currentInput.includes('.')) {
+                currentInput += '.';
+            }
+            updateDisplay();
+        }
+
+        // Set Operator Function
+        function setOperator(op) {
+            if (operator !== null && !shouldResetDisplay) {
+                calculateResult();
+            }
+            previousInput = currentInput;
+            operator = op;
+            shouldResetDisplay = true;
+            updateDisplay();
+        }
+
+        // Calculate Result
+        function calculateResult() {
+            if (operator === null || shouldResetDisplay) return;
+
+            let prev = parseFloat(previousInput);
+            let current = parseFloat(currentInput);
+            let result = 0;
+
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '×':
+                    result = prev * current;
+                    break;
+                case '÷':
+                    if (current === 0) {
+                        currentInput = 'Fehler';
+                        operator = null;
+                        previousInput = '';
+                        shouldResetDisplay = true;
+                        mainDisplay.innerText = currentInput;
+                        historyDisplay.innerText = 'Teilen durch 0 unmöglich';
+                        return;
+                    }
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+
+            // Round long floating point calculations
+            result = Math.round(result * 100000000) / 100000000;
+
+            historyDisplay.innerText = `${previousInput.replace('.', ',')} ${operator} ${currentInput.replace('.', ',')} =`;
+            currentInput = result.toString();
+            operator = null;
+            previousInput = '';
+            shouldResetDisplay = true;
+            mainDisplay.innerText = currentInput.replace('.', ',');
+        }
+
+        // Clear All (AC)
+        function clearAll() {
+            currentInput = '0';
+            previousInput = '';
+            operator = null;
+            shouldResetDisplay = false;
+            updateDisplay();
+        }
+
+        // Toggle Sign (+/-)
+        function toggleSign() {
+            if (currentInput === '0' || currentInput === 'Fehler') return;
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            updateDisplay();
+        }
+
+        // Percentage Function
+        function applyPercentage() {
+            if (currentInput === 'Fehler') return;
+            currentInput = (parseFloat(currentInput) / 100).toString();
+            updateDisplay();
+        }
+
+        // Keyboard Listener
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
+            if (e.key === '.' || e.key === ',') appendDecimal();
+            if (e.key === '+') setOperator('+');
+            if (e.key === '-') setOperator('-');
+            if (e.key === '*') setOperator('×');
+            if (e.key === '/') setOperator('÷');
+            if (e.key === 'Enter' || e.key === '=') {
+                e.preventDefault();
+                calculateResult();
+            }
+            if (e.key === 'Backspace' || e.key === 'Escape') clearAll();
+            if (e.key === '%') applyPercentage();
+        });
+    </script>
+</body>
+</html>
